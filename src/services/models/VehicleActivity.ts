@@ -1,40 +1,40 @@
 interface FramedVehicleJourneyRef {
-    dateFrameRef: string;
+    dateFrameRef          : string;
     datedVehicleJourneyRef: string;
 }
 
 interface VehicleLocation {
     longitude: string;
-    latitude: string;
+    latitude : string;
 }
 
 interface OnwardCall {
-    expectedArrivalTime: Date;
+    expectedArrivalTime  : Date;
     expectedDepartureTime: Date;
-    stopPointRef: string;
-    order: string;
+    stopPointRef         : string;
+    order                : string;
 }
 
 interface MonitoredVehicleJourney {
-    lineRef: string;
-    directionRef: string;
-    framedVehicleJourneyRef: FramedVehicleJourneyRef;
-    vehicleLocation: VehicleLocation;
-    operatorRef: string;
-    bearing: string;
-    delay: string;
-    vehicleRef: string;
-    journeyPatternRef: string;
-    originShortName: string;
-    destinationShortName: string;
-    speed: string;
+    lineRef                 : string;
+    directionRef            : string;
+    framedVehicleJourneyRef : FramedVehicleJourneyRef;
+    vehicleLocation         : VehicleLocation;
+    operatorRef             : string;
+    bearing                 : string;
+    delay                   : string;
+    vehicleRef              : string;
+    journeyPatternRef       : string;
+    originShortName         : string;
+    destinationShortName    : string;
+    speed                   : string;
     originAimedDepartureTime: string;
-    onwardCalls: OnwardCall[];
+    onwardCalls             : OnwardCall[];
 }
 
 export interface VehicleActivity {
-    recordedAtTime: Date;
-    validUntilTime: Date;
+    recordedAtTime         : Date;
+    validUntilTime         : Date;
     monitoredVehicleJourney: MonitoredVehicleJourney;
 }
 

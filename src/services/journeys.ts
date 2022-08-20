@@ -12,7 +12,6 @@ function addRef(url: string, ref: RefType | undefined){
 export const journeysApi = createApi({
     reducerPath: 'journeysApi',
     baseQuery  : fetchBaseQuery({ baseUrl: 'http://data.itsfactory.fi/journeys/api/1/' }),
-    // baseQuery  : fetchBaseQuery({ baseUrl: 'https://localhost/' }),
     tagTypes   : [],
     endpoints  : ( builder ) => ( {
 

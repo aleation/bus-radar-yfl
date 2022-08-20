@@ -3,7 +3,7 @@ import './assets/css/App.css';
 import { MapContainer, Popup, TileLayer } from 'react-leaflet';
 import { LatLngTuple } from "leaflet";
 import { BusMarker } from './components/BusMarker';
-// import { decodeProjection } from './helpers/misc';
+import { decodeProjection, mapVehiclesActivityToPositions, locationToTuple } from './helpers/misc';
 import { VehicleActivity, excludeFields as vehicleActivityExcludeFields } from "./services/models/VehicleActivity";
 
 import {
@@ -15,25 +15,6 @@ import {
     useGetMunicipalitiesQuery,
     useGetVehicleActivityQuery
 } from './services/journeys';
-
-
-
-// const decodedProjection = decodeProjection(geographicCoordinateProjection);
-
-function locationToTuple( { longitude, latitude }: { longitude: string, latitude: string }):LatLngTuple{
-    return [parseFloat(latitude), parseFloat(longitude)];
-}
-
-function mapVehiclesActivityToPositions(vehiclesActivityData: VehicleActivity[]){
-    return Object.fromEntries(
-        vehiclesActivityData.map(
-            (vehicleActivityData) => {
-                return [ vehicleActivityData.monitoredVehicleJourney.vehicleRef, locationToTuple(vehicleActivityData.monitoredVehicleJourney.vehicleLocation)];
-            }
-        )
-    );
-}
-
 
 function App() {
     const [vehiclesActivity, setVehiclesActivity]                   = useState([]);
@@ -67,7 +48,6 @@ function App() {
             </BusMarker>
         )
     )
-
 
     return (
         <div className="h-full w-full">
