@@ -1,25 +1,34 @@
 import { Icon, LatLngTuple } from "leaflet";
-import React, { ReactNode } from "react";
+import React, { ReactNode, useEffect, useState } from "react";
 import { LeafletTrackingMarker } from "react-leaflet-tracking-marker";
 import busIcon from "../assets/images/bus.png";
 
-export function BusMarker({ position, previousPosition, children }: {
+export function BusMarker({ position, bearing, children }: {
     position        : LatLngTuple,
-    previousPosition: LatLngTuple,
-    children        : ReactNode
+    children        : ReactNode,
+    bearing         : string,
 }){
+    // const [previousPosition, setPreviousPosition] = useState(position);
+
+    /*useEffect(() => {
+        if(position[0] !== previousPosition[0] || position[1] !== previousPosition[1]){
+            setPreviousPosition(position);
+        }
+    }, [position]);*/
+
     return(
         //TODO: The package doesn't come TS prepared, refactor to add compatibility
         //@ts-ignore
         <LeafletTrackingMarker
             position         = { position }
-            previousPosition = { previousPosition }
+            // previousPosition = { previousPosition }
             duration         = { 2500 }
             icon             = { new Icon({
                 iconUrl: busIcon,
-                iconSize: [32, 39],
-                iconAnchor: [16, 39],
+                iconSize: [36, 30],
+                iconAnchor: [15, 15],
             })}
+            rotationAngle    = { parseFloat(bearing) - 90 }
         >
             { children }
         </LeafletTrackingMarker>

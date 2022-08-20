@@ -13,6 +13,7 @@ export const journeysApi = createApi({
     reducerPath: 'journeysApi',
     baseQuery  : fetchBaseQuery({ baseUrl: 'http://data.itsfactory.fi/journeys/api/1/' }),
     tagTypes   : [],
+    keepUnusedDataFor: 60 * 15,
     endpoints  : ( builder ) => ( {
 
         //TODO: All the endpoints query logic is the same except the queryParameters

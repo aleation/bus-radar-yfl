@@ -18,15 +18,12 @@ import {
 
 function App() {
     const [vehiclesActivity, setVehiclesActivity]                   = useState([]);
-    const [vehiclesPreviousPositions, setVehiclesPreviousPositions] = useState<{[key: string]: LatLngTuple}>({});
 
     const vehiclesActivityRequest = useGetVehicleActivityQuery({ queryParameters: { 'exclude-fields': vehicleActivityExcludeFields } } , { pollingInterval: 1000 });
 
     useEffect(() => {
         if(vehiclesActivityRequest.status === 'fulfilled'){
-            const vehiclesActivityData = vehiclesActivityRequest.data.body;
-            setVehiclesPreviousPositions(mapVehiclesActivityToPositions(vehiclesActivityData));
-            setVehiclesActivity(vehiclesActivityData);
+            setVehiclesActivity(vehiclesActivityRequest.data.body);
         }
 
 
@@ -35,14 +32,17 @@ function App() {
     //TODO: This probably should be set using useState, but I have problems with the TS types, check!
     const vehiclesMarkers = vehiclesActivity.map((vehicleActivity: VehicleActivity) => (
             <BusMarker
-                position={ locationToTuple(vehicleActivity.monitoredVehicleJourney.vehicleLocation) }
-                previousPosition={ vehiclesPreviousPositions[vehicleActivity.monitoredVehicleJourney.vehicleRef] }
-
+                position = {  locationToTuple(vehicleActivity.monitoredVehicleJourney.vehicleLocation) }
+                bearing  = {  vehicleActivity.monitoredVehicleJourney.bearing }
                 key={ vehicleActivity.monitoredVehicleJourney.vehicleRef }
             >
+                <div style={{ position: 'absolute' }}>
+                    hello
+                </div>
                 <Popup>
                     {
-                        locationToTuple(vehicleActivity.monitoredVehicleJourney.vehicleLocation)
+                        // locationToTuple(vehicleActivity.monitoredVehicleJourney.vehicleLocation)
+                        vehicleActivity.monitoredVehicleJourney.bearing
                     }
                 </Popup>
             </BusMarker>
