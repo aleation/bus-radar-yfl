@@ -1,5 +1,4 @@
 import { LatLngTuple } from "leaflet";
-import { VehicleActivity } from "../services/models/VehicleActivity";
 
 export function decodeProjection(projection:string):LatLngTuple[]{
 
@@ -17,14 +16,4 @@ export function decodeProjection(projection:string):LatLngTuple[]{
 
 export function locationToTuple( { longitude, latitude }: { longitude: string, latitude: string }):LatLngTuple{
     return [parseFloat(latitude), parseFloat(longitude)];
-}
-
-export function mapVehiclesActivityToPositions(vehiclesActivityData: VehicleActivity[]){
-    return Object.fromEntries(
-        vehiclesActivityData.map(
-            (vehicleActivityData) => {
-                return [ vehicleActivityData.monitoredVehicleJourney.vehicleRef, locationToTuple(vehicleActivityData.monitoredVehicleJourney.vehicleLocation)];
-            }
-        )
-    );
 }

@@ -14,13 +14,14 @@ export function BusMarker({ position, vehicleActivity }: {
         //@ts-ignore
         <LeafletTrackingMarker
             position         = { position }
-            duration         = { 2500 }
+            //TODO: Maybe this can be dynamic, so the animation will be smoother
+            duration         = { 3000 }
             icon             = { new DivIcon({
-                className: "",
-                iconSize: [36, 30],
-                iconAnchor: [15, 15],
+                className  : "",
+                iconSize   : [36, 30],
+                iconAnchor : [15, 15],
                 popupAnchor: [0, -10],
-                html: `<div class="relative bg-none">
+                html       : `<div class="relative bg-none">
                     <img style="position: absolute; transform: rotate(${parseFloat(vehicleActivity.monitoredVehicleJourney.bearing) - 90}deg); transform-origin: 15px center" src="${busIcon}"/>
                     <div style="position: absolute; top:0; left:0; height: 30px; width: 30px;  display: flex; align-items: center; justify-content: center;">
                         <span class="text-white font-bold">${vehicleActivity.monitoredVehicleJourney.lineRef}</span>
@@ -30,11 +31,6 @@ export function BusMarker({ position, vehicleActivity }: {
             //TODO: Clean tricky hack. If I don't set the value or set it to 0 or a falsy value, the component attempts
             // to auto rotate the whole component based on previousPosition property (auto-calculates it)
             rotationAngle    = { .1 }
-        >
-            <Popup>
-                Hello
-            </Popup>
-        </LeafletTrackingMarker>
-
+        />
     )
 }
