@@ -33,19 +33,9 @@ function App() {
     const vehiclesMarkers = vehiclesActivity.map((vehicleActivity: VehicleActivity) => (
             <BusMarker
                 position = {  locationToTuple(vehicleActivity.monitoredVehicleJourney.vehicleLocation) }
-                bearing  = {  vehicleActivity.monitoredVehicleJourney.bearing }
+                vehicleActivity  = {  vehicleActivity }
                 key={ vehicleActivity.monitoredVehicleJourney.vehicleRef }
-            >
-                <div style={{ position: 'absolute' }}>
-                    hello
-                </div>
-                <Popup>
-                    {
-                        // locationToTuple(vehicleActivity.monitoredVehicleJourney.vehicleLocation)
-                        vehicleActivity.monitoredVehicleJourney.bearing
-                    }
-                </Popup>
-            </BusMarker>
+            />
         )
     )
 
