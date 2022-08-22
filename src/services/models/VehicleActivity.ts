@@ -41,7 +41,7 @@ export interface VehicleActivity {
 export const excludeFields = [
     'recordedAtTime',
     'validUntilTime',
-    'monitoredVehicleJourney.framedVehicleJourneyRef',
+    // 'monitoredVehicleJourney.framedVehicleJourneyRef',
     'monitoredVehicleJourney.operatorRef',
     // 'monitoredVehicleJourney.delay',
     // 'monitoredVehicleJourney.originShortName',

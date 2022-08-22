@@ -1,0 +1,31 @@
+.bus-marker {
+  transition: translate 5s linear;
+
+  & > div:first-of-type {
+    @apply relative;
+
+    & > img:first-of-type {
+      @apply absolute;
+      transform-origin: center 21px;
+      transition: all 2s linear;
+    }
+
+    & > div:first-of-type {
+      @apply absolute top-0 left-0 flex flex-col items-center justify-end;
+      height: 30px;
+      width : 30px;
+      line-height: .75em;
+
+      & span:first-child {
+        @apply text-white font-bold;
+        font-size: .8em;
+
+        & + span{
+          @apply text-yellow-300;
+          font-size: .6em;
+        }
+      }
+    }
+  }
+}
+

@@ -12,6 +12,7 @@ function addRef(url: string, ref: RefType | undefined){
 export const journeysApi = createApi({
     reducerPath: 'journeysApi',
     baseQuery  : fetchBaseQuery({ baseUrl: 'http://data.itsfactory.fi/journeys/api/1/' }),
+    // baseQuery  : fetchBaseQuery({ baseUrl: 'http://localhost' }),
     tagTypes   : [],
     keepUnusedDataFor: 60 * 15,
     endpoints  : ( builder ) => ( {
@@ -65,7 +66,8 @@ export const journeysApi = createApi({
                     stopPointId?     : RefType,
                     gtfsTripId?      : RefType,
                 }>
-            ) => ({ url: addRef('journeys', args?.ref), params: args?.queryParameters })
+            ) => ({ url: addRef('journeys', args?.ref), params: args?.queryParameters,  }),
+
         }),
 
         getStopPoints: builder.query({
