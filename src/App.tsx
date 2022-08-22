@@ -1,8 +1,16 @@
-import React, { useEffect, useState } from 'react';
+import React, { ReactFragment, useEffect, useState } from 'react';
 import './assets/css/App.css';
 import 'leaflet/dist/leaflet.css';
 import './assets/css/LeafletLayersControlOverride.scss';
-import { FeatureGroup, LayersControl, MapContainer, Polyline, Popup, TileLayer } from 'react-leaflet';
+import {
+    FeatureGroup,
+    LayersControl,
+    LayersControlProps,
+    MapContainer,
+    Polyline,
+    Popup,
+    TileLayer
+} from 'react-leaflet';
 import { BusMarker } from './components/BusMarker';
 import { decodeProjection } from './helpers/misc';
 import groupBy from 'lodash/groupBy';
@@ -57,7 +65,7 @@ function App() {
 
     useEffect(() => {
         if(routeQuery.status === 'fulfilled'){
-            //Paint line
+            //Paint route polyline
         }
     }, [routeQuery]);
 
@@ -70,14 +78,14 @@ function App() {
 
     function mapVehiclesActivityToMarkers( vehiclesActivity: VehicleActivity[] ) {
         const groupedVehiclesActivity = groupBy(vehiclesActivity, 'monitoredVehicleJourney.lineRef');
-        let result: any[] = [];
+        let result: React.ReactNode[] = [];
         for(const lineRef in groupedVehiclesActivity){
             const vehiclesActivityJSX = groupedVehiclesActivity[lineRef].map(
                 (vehicleActivity: VehicleActivity) => (
                     <BusMarker
                         vehicleActivity = { vehicleActivity }
                         key             = { vehicleActivity.monitoredVehicleJourney.vehicleRef }
-                        eventHandlers    = {{ popupopen: () => handlePopupOpen(vehicleActivity) }}
+                        eventHandlers   = {{ popupopen: () => handlePopupOpen(vehicleActivity) }}
                     />
                 )
             )
@@ -105,7 +113,7 @@ function App() {
 
                 <LayersControl position="topright">
 
-                    { vehiclesActivity.length &&
+                    {
                        mapVehiclesActivityToMarkers(vehiclesActivity)
                     }
 

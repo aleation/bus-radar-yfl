@@ -10,6 +10,8 @@ export function BusMarker({ eventHandlers, vehicleActivity }: {
     eventHandlers   : object,
     vehicleActivity : VehicleActivity,
 }){
+    //TODO: translating marker using CSS wasn't such a good idea.
+    // implement algorithm to update position using Marker.setLatLng()
     return <Marker
         position         = { locationToTuple(vehicleActivity.monitoredVehicleJourney.vehicleLocation) }
         eventHandlers    = { eventHandlers }
