@@ -44,7 +44,7 @@ export const excludeFields = [
     'monitoredVehicleJourney.framedVehicleJourneyRef',
     'monitoredVehicleJourney.operatorRef',
     // 'monitoredVehicleJourney.delay',
-    'monitoredVehicleJourney.originShortName',
-    'monitoredVehicleJourney.destinationShortName',
+    // 'monitoredVehicleJourney.originShortName',
+    // 'monitoredVehicleJourney.destinationShortName',
     'monitoredVehicleJourney.originAimedDepartureTime',
 ].join(',');

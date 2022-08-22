@@ -92,7 +92,7 @@ export const journeysApi = createApi({
         getVehicleActivity: builder.query({
             query:(
                 args?: ApiQueryArgs<{
-                    lineRef?     : RefType,    //String or comma separated list of strings with * as wildcard, for example: lineRef=3 or lineRef=3,1*
+                        lineRef?     : RefType,    //String or comma separated list of strings with * as wildcard, for example: lineRef=3 or lineRef=3,1*
                     vehicleRef?  : RefType,    //String or comma separated list of strings with * as wildcard (see lineRef)
                     journeyRef?  : RefType,    //String or comma separated list of strings with * as wildcard (see lineRef)
                     directionRef?: '1' | '2',  //String, choice of 1 or 2
