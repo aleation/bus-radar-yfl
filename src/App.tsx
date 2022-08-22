@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import './assets/css/App.css';
+import 'leaflet/dist/leaflet.css';
 import { MapContainer, Popup, TileLayer } from 'react-leaflet';
 import { BusMarker } from './components/BusMarker';
 import { decodeProjection, locationToTuple } from './helpers/misc';
