@@ -1,9 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import './assets/css/App.css';
 import 'leaflet/dist/leaflet.css';
-import { MapContainer, Polyline, Popup, TileLayer } from 'react-leaflet';
+import './assets/css/LeafletLayersControlOverride.scss';
+import { FeatureGroup, LayersControl, MapContainer, Polyline, Popup, TileLayer } from 'react-leaflet';
 import { BusMarker } from './components/BusMarker';
 import { decodeProjection } from './helpers/misc';
+import groupBy from 'lodash/groupBy';
 import { VehicleActivity, excludeFields as vehicleActivityExcludeFields } from "./services/models/VehicleActivity";
 import {
     useGetLinesQuery,
@@ -29,7 +31,7 @@ function App() {
     const [journeyPatternRef, setJourneyPatternRef] = useState('');
     const [routeRef,          setRouteRef]          = useState('');
 
-    const vehiclesActivityQuery = useGetVehicleActivityQuery({ queryParameters: { 'exclude-fields': vehicleActivityExcludeFields } } , { pollingInterval: 0 } );
+    const vehiclesActivityQuery = useGetVehicleActivityQuery({ queryParameters: { 'exclude-fields': vehicleActivityExcludeFields } } , { pollingInterval: 1000 } );
     useEffect(() => {
         if(vehiclesActivityQuery.status === 'fulfilled'){
             setVehiclesActivity(vehiclesActivityQuery.data.body);
@@ -66,6 +68,33 @@ function App() {
         }
     }
 
+    function mapVehiclesActivityToMarkers( vehiclesActivity: VehicleActivity[] ) {
+        const groupedVehiclesActivity = groupBy(vehiclesActivity, 'monitoredVehicleJourney.lineRef');
+        let result: any[] = [];
+        for(const lineRef in groupedVehiclesActivity){
+            const vehiclesActivityJSX = groupedVehiclesActivity[lineRef].map(
+                (vehicleActivity: VehicleActivity) => (
+                    <BusMarker
+                        vehicleActivity = { vehicleActivity }
+                        key             = { vehicleActivity.monitoredVehicleJourney.vehicleRef }
+                        eventHandlers    = {{ popupopen: () => handlePopupOpen(vehicleActivity) }}
+                    />
+                )
+            )
+
+            result = ([...result, (
+                <LayersControl.Overlay name={ lineRef } key={ lineRef } checked={ true }>
+                    <FeatureGroup key={ lineRef }  >
+                        { vehiclesActivityJSX }
+                    </FeatureGroup>
+                </LayersControl.Overlay>
+            )]);
+        }
+
+        return result;
+
+    }
+
     return (
         <div className="h-full w-full">
             <MapContainer
@@ -74,17 +103,13 @@ function App() {
                 zoom     = { 12 }
             >
 
-                { vehiclesActivity.length &&
-                    vehiclesActivity.map(
-                        (vehicleActivity: VehicleActivity) => (
-                            <BusMarker
-                                vehicleActivity = { vehicleActivity }
-                                key             = { vehicleActivity.monitoredVehicleJourney.vehicleRef }
-                                eventHandlers    = {{ popupopen: () => handlePopupOpen(vehicleActivity) }}
-                            />
-                        )
-                    )
-                }
+                <LayersControl position="topright">
+
+                    { vehiclesActivity.length &&
+                       mapVehiclesActivityToMarkers(vehiclesActivity)
+                    }
+
+                </LayersControl>
 
                 {/*<Polyline
                     pathOptions={{color: 'blue'}}

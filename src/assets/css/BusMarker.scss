@@ -1,5 +1,9 @@
+.leaflet-popup{
+  transition: transform 5s;
+}
+
 .bus-marker {
-  transition: translate 5s linear;
+  transition: transform 5s linear;
 
   & > div:first-of-type {
     @apply relative;
@@ -7,6 +11,7 @@
     & > img:first-of-type {
       @apply absolute;
       transform-origin: center 21px;
+      //TODO: rotation is not animated ?
       transition: all 2s linear;
     }
 

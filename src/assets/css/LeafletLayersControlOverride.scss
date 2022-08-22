@@ -1,0 +1,25 @@
+.leaflet-control-layers-overlays{
+  @apply flex flex-wrap max-w-xs;
+  label{
+    @apply text-base m-2.5;
+    & > span{
+
+      input[type=checkbox]{
+        @apply hidden;
+
+        & + span{
+          width: 2.75em;
+          height: 2.75em;
+          @apply flex items-center justify-center py-2 rounded-full bg-stone-300 text-stone-400 cursor-pointer transition-colors;
+        }
+
+        &:checked + span{
+          @apply bg-blue-500 text-white;
+        }
+      }
+
+      & > span {
+      }
+    }
+  }
+}
