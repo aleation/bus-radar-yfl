@@ -6323,6 +6323,11 @@ language-tags@^1.0.5:
   dependencies:
     language-subtag-registry "~0.3.2"
 
+leaflet-drift-marker@^2.0.0:
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/leaflet-drift-marker/-/leaflet-drift-marker-2.0.0.tgz#7ab45dba09270b6fe59d31144c362f8f900e3243"
+  integrity sha512-dmYMW5A/rpNA2YGnakMzhhQNGJADjJG1L6THa/UKMYZ/CI3podhmsCaWCNh0/DnqcxRaSCR/8JBp+iimNx7lEQ==
+
 leaflet@^1.8.0:
   version "1.8.0"
   resolved "https://registry.yarnpkg.com/leaflet/-/leaflet-1.8.0.tgz#4615db4a22a304e8e692cae9270b983b38a2055e"
@@ -8025,6 +8030,13 @@ react-is@^18.0.0:
   version "18.2.0"
   resolved "https://registry.yarnpkg.com/react-is/-/react-is-18.2.0.tgz#199431eeaaa2e09f86427efbb4f1473edb47609b"
   integrity sha512-xWGDIW6x921xtzPkhiULtthJHoJvBbF3q26fzloPCK0hsvxtPVelvftw3zjbHWSkR2km9Z+4uxbDDK/6Zw9B8w==
+
+react-leaflet-drift-marker@^3.0.0:
+  version "3.0.0"
+  resolved "https://registry.yarnpkg.com/react-leaflet-drift-marker/-/react-leaflet-drift-marker-3.0.0.tgz#461c0e90559246c54e3e70e9a0dc188338e9c2ae"
+  integrity sha512-SXyvplhe93Ns1mNQYijLHU1dF1Awjaw9kCA5Wp4UuXFPEieWU/MeadhJnDcSJEATNtknT+DeDlMmUvnHX4M08w==
+  dependencies:
+    leaflet-drift-marker "^2.0.0"
 
 react-leaflet@^4.0.1:
   version "4.0.1"

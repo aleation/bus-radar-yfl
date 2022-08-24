@@ -1,0 +1,29 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+html,body,#root{
+    height: 100%;
+}
+
+@font-face{
+    font-family: 'Montserrat';
+    src: local('Montserrat'), url('../fonts/Montserrat-VariableFont_wght.ttf') format('truetype');
+}
+
+@font-face{
+    font-family: 'Montserrat';
+    font-style: italic;
+    src: local('Montserrat'), url('../fonts/Montserrat-Italic-VariableFont_wght.ttf') format('truetype');
+}
+
+@font-face{
+    font-family: 'Open Sans';
+    src: local('Open Sans'), url('../fonts/OpenSans-VariableFont_wdth,wght.ttf') format('truetype');
+}
+
+@font-face{
+    font-family: 'Open Sans';
+    font-style: italic;
+    src: local('Open Sans'), url('../fonts/OpenSans-Italic-VariableFont_wdth,wght.ttf') format('truetype');
+}
