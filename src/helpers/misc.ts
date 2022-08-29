@@ -14,6 +14,14 @@ export function decodeProjection(projection:string):LatLngTuple[]{
     return decodedProjection;
 }
 
-export function locationToTuple( { longitude, latitude }: { longitude: string, latitude: string }):LatLngTuple{
-    return [parseFloat(latitude), parseFloat(longitude)];
+export function locationToTuple( location: { longitude: string, latitude: string } | string):LatLngTuple{
+    if(typeof location === 'object'){
+        return [parseFloat(location.latitude), parseFloat(location.longitude)];
+    } else if( typeof location === 'string') {
+        const tuple = location.split(',');
+        return [parseFloat(tuple[0]), parseFloat(tuple[1])];
+    } else {
+        console.error('Wrong type of location parameter:' + typeof location + ', expected object or string');
+        return [0,0];
+    }
 }

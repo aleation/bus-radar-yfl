@@ -4,7 +4,7 @@ interface Municipality {
     name     : string;
 }
 
-interface StopPoint {
+export interface StopPoint {
     url         : string;
     location    : string;
     name        : string;
