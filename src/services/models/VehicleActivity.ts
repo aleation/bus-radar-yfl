@@ -37,14 +37,3 @@ export interface VehicleActivity {
     validUntilTime         : Date;
     monitoredVehicleJourney: MonitoredVehicleJourney;
 }
-
-export const excludeFields = [
-    // 'recordedAtTime',
-    'validUntilTime',
-    // 'monitoredVehicleJourney.framedVehicleJourneyRef',
-    'monitoredVehicleJourney.operatorRef',
-    // 'monitoredVehicleJourney.delay',
-    // 'monitoredVehicleJourney.originShortName',
-    // 'monitoredVehicleJourney.destinationShortName',
-    'monitoredVehicleJourney.originAimedDepartureTime',
-].join(',');

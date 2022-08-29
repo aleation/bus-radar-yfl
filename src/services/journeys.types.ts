@@ -1,7 +1,7 @@
 //TODO: Most likely all the numbers are concatenated to the end of the baseUrl(string),
 // so they will be cast into string anyway. This is not very safe, check better later,
 // for now, for cleanness and not adding conditions and casts into each endpoint I'll leave it like this
-export type RefType = number | string;
+export type RefType = number | string | undefined;
 
 export interface CommonQueryParameters {
     startIndex?       : number,
@@ -10,7 +10,7 @@ export interface CommonQueryParameters {
 };
 
 export type ApiQueryArgs<QP> = {
-    ref?             : RefType,
+    ref?              : RefType,
     queryParameters? : QP & CommonQueryParameters
 }
 
