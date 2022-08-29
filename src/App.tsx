@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { ReactNode, useEffect, useState } from 'react';
 import './assets/css/App.css';
 import 'leaflet/dist/leaflet.css';
 import './assets/css/LeafletOverride.scss';
@@ -45,6 +45,10 @@ function App() {
     const [journeysPatternsRef, setJourneysPatternsRef] = useState<RefType>();
     const [routesRef,           setRoutesRef]          = useState<RefType>();
 
+    const [routePolyline, setRoutePolyline] = useState<ReactNode>();
+
+    const [busStops, setBusStops] = useState<ReactNode>();
+
     const [journey,        setJourney]        = useState<Journey>();
     const [journeyPattern, setJourneyPattern] = useState<JourneyPattern>();
     const [route,          setRoute]          = useState<Route>();
@@ -88,6 +92,34 @@ function App() {
             setRoute(routesQuery.data.body[0]);
         }
     }, [routesQuery]);
+
+    useEffect(() => {
+        if(route){
+            setRoutePolyline(<Polyline
+                pathOptions={{color: 'blue'}}
+                positions={ decodeProjection(route.geographicCoordinateProjection)}
+            />)
+        }
+    }, [route]);
+
+    useEffect(() => {
+        if(journeyPattern && route){
+            setBusStops(journeyPattern.stopPoints.map((stopPoint: StopPoint) => (
+                <BusStopMarker
+                    stopPoint = { stopPoint }
+                >
+                    <Popup>
+                        <table>
+                            <tr><td className="font-bold">Line</td><td>{ route.lineUrl.split('/').pop() }</td></tr>
+                            <tr><td className="font-bold">Bus stop:</td><td>{ stopPoint.name } ({ stopPoint.shortName })</td></tr>
+                            <tr><td className="font-bold">Tariff Zone:</td><td>{ stopPoint.tariffZone }</td></tr>
+                        </table>
+                    </Popup>
+                </BusStopMarker>
+
+            )));
+        }
+    }, [journeyPattern, route]);
 
     function handlePopupOpen(e:LeafletEvent, vehicleActivity:VehicleActivity){
         const popupElement = e.popup.getElement();
@@ -138,21 +170,8 @@ function App() {
             result = ([...result, (
                 <LayersControl.Overlay name={ lineRef } key={ lineRef } checked={ true }>
                     <FeatureGroup key={ lineRef }  >
+
                         { vehiclesActivityJSX }
-
-                        { route &&
-                            <Polyline
-                                pathOptions={{color: 'blue'}}
-                                positions={ decodeProjection(route.geographicCoordinateProjection)}
-                            />
-                        }
-
-                        { journeyPattern && journeyPattern.stopPoints.map((stopPoint: StopPoint) => (
-                            <BusStopMarker
-                                stopPoint = { stopPoint }
-                            />
-                        )) }
-
 
                     </FeatureGroup>
                 </LayersControl.Overlay>
@@ -169,6 +188,7 @@ function App() {
                 className= "h-full w-full"
                 center   = { [61.4990, 23.7605] }
                 zoom     = { 12 }
+                preferCanvas={ true }
             >
 
                 <LayersControl position="topright">
@@ -178,6 +198,10 @@ function App() {
                     }
 
                 </LayersControl>
+
+                { routePolyline }
+
+                { busStops }
 
                 <TileLayer
                     attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
