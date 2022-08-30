@@ -56,7 +56,7 @@ export function BusMarker({ eventHandlers, vehicleActivity, journey }: {
             const currentCalls            = journey.calls.slice(firstOnwardCallIndex);
 
             const total            = currentCalls.length;
-            const firstCallsAmount = 3;
+            const firstCallsAmount = 5;
 
             let jsx;
 
