@@ -49,9 +49,9 @@ export function BusMarker({ eventHandlers, vehicleActivity, journey }: {
 
     useEffect( () => {
 
-        if(journey){
+        if(journey && onwardCalls){
             //For some reason onwardCalls return the IP as host, and calls return normal hostname
-            const firstOnwardCallPathName = new URL(vehicleActivity.monitoredVehicleJourney.onwardCalls[0].stopPointRef).pathname;
+            const firstOnwardCallPathName = new URL(onwardCalls[0].stopPointRef).pathname;
             const firstOnwardCallIndex    = journey.calls.findIndex((call: Call) => new URL(call.stopPoint.url).pathname === firstOnwardCallPathName );
             const currentCalls            = journey.calls.slice(firstOnwardCallIndex);
 

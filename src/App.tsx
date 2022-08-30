@@ -101,7 +101,7 @@ function App() {
             setBusMarkerGroups(undefined);
         }
 
-    }, [vehiclesActivity, journey]);
+    }, [vehiclesActivity, journey, journeysRef]);
 
     const journeysQuery         = useGetJourneysQuery(        { ref: journeysRef},         manualQueriesOptions(journeysRef) );
     const journeysPatternsQuery = useGetJourneyPatternsQuery( { ref: journeysPatternsRef}, manualQueriesOptions(journeysPatternsRef) );

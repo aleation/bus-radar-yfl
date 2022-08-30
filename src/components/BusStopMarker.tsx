@@ -1,6 +1,6 @@
-import React, { ReactNode } from "react";
-import { Marker, Popup, Tooltip } from "react-leaflet";
-import { Icon, LatLngTuple } from "leaflet";
+import React from "react";
+import { Marker, Popup } from "react-leaflet";
+import { Icon } from "leaflet";
 import busStopIcon from "../assets/images/bus_stop.png";
 import { StopPoint } from "../services/models/JourneyPattern";
 import { locationToTuple } from "../helpers/misc";
