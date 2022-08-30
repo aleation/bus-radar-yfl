@@ -17,6 +17,7 @@ export function BusMarker({ eventHandlers, vehicleActivity, journey }: {
 
     const [calls,       setCalls]       = useState<ReactNode>();
     const [onwardCalls, setOnwardCalls] = useState<OnwardCall[]>();
+    const [delay,       setDelay]       = useState<string>();
 
     useEffect( () => {
         setOnwardCalls(vehicleActivity.monitoredVehicleJourney.onwardCalls);
@@ -25,6 +26,26 @@ export function BusMarker({ eventHandlers, vehicleActivity, journey }: {
             setOnwardCalls(undefined);
         }
     }, [vehicleActivity.monitoredVehicleJourney.onwardCalls]);
+
+    useEffect(() => {
+
+        const delayString = vehicleActivity.monitoredVehicleJourney.delay;
+
+        // When it's negative, it's not actually delayed, but the remaining time
+        if(delayString[0] !== '-'){
+            const matches   = Array.from(delayString.matchAll(/([0-9.]+[Y|M|D|H|S])/g));
+            const timeFrame = [ 'Years', 'Months', 'Days', 'Hours', 'Minutes', 'Seconds' ];
+            setDelay(matches.map((v,k) => parseInt(v[0]) + ' ' + timeFrame[k])
+                .filter(parseFloat).join(' '));
+
+        }
+
+        return () => {
+                setDelay(undefined);
+        }
+
+    }, [vehicleActivity.monitoredVehicleJourney.delay]);
+
 
     useEffect( () => {
 
@@ -117,7 +138,12 @@ export function BusMarker({ eventHandlers, vehicleActivity, journey }: {
                     <div>{ calls }</div>
                 </>
             }
-            {/*<div>{ vehicleActivity.monitoredVehicleJourney.delay }</div>*/}
+            { delay &&
+                <div className="mt-4 text-right">
+                    Delay:
+                    <span className="text-red-500 ml-1">{ delay }</span>
+                </div>
+            }
         </Popup>
     </Marker>
 
