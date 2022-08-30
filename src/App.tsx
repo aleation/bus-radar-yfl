@@ -112,11 +112,21 @@ function App() {
             setJourneysPatternsRef(journeysQuery.data.body[0].journeyPatternUrl.split('/').pop());
             setRoutesRef(journeysQuery.data.body[0].routeUrl.split('/').pop())
         }
+
+        return () => {
+            setJourney(undefined);
+            setJourneysPatternsRef(undefined);
+            setRoutesRef(undefined)
+        }
     }, [ journeysQuery ]);
 
     useEffect(() => {
         if(journeysPatternsQuery.status === 'fulfilled'){
             setJourneyPattern(journeysPatternsQuery.data.body[0]);
+        }
+
+        return () => {
+            setJourneyPattern(undefined);
         }
     }, [journeysPatternsQuery]);
 
@@ -124,6 +134,9 @@ function App() {
         if(routesQuery.status === 'fulfilled'){
             setRoute(routesQuery.data.body[0]);
         }
+
+        return () => setRoute(undefined);
+
     }, [routesQuery]);
 
     useEffect(() => {
@@ -133,6 +146,11 @@ function App() {
                 positions   = { decodeProjection(route.geographicCoordinateProjection)}
             />)
         }
+
+        return () => {
+            setRoutePolyline(undefined);
+        }
+
     }, [route]);
 
     useEffect(() => {
@@ -145,6 +163,11 @@ function App() {
                 />
             )));
         }
+
+        return () => {
+            setBusStops(undefined);
+        }
+
     }, [journeyPattern, route]);
 
     function handlePopupOpen(e:LeafletEvent, vehicleActivity:VehicleActivity){
@@ -153,16 +176,6 @@ function App() {
 
         // This should start a chain of api requests to get the Journey, JourneyPattern and Route
         const journeysRefString = vehicleActivity.monitoredVehicleJourney.framedVehicleJourneyRef.datedVehicleJourneyRef.split('/').pop();
-
-        //Removing the painted Journey and Route from states immediately if we are opening a different one
-        if(journeysRefString !== journeysRef){
-            setJourney(undefined);
-            setJourneyPattern(undefined);
-            setRoute(undefined);
-
-            setRoutePolyline(undefined);
-            setBusStops(undefined);
-        }
 
         if(journeysRefString){
             setJourneysRef(journeysRefString);
