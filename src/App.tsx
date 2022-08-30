@@ -70,7 +70,8 @@ function App() {
                 (vehicleActivity: VehicleActivity) => (
                     <ErrorBoundary key={ 'error_' + vehicleActivity.monitoredVehicleJourney.vehicleRef }>
                         <BusMarker
-                            journey         = { journey }
+                            //TODO: This is a quick patch, do it better.
+                            journey         = { journey && journeysRef === vehicleActivity.monitoredVehicleJourney.framedVehicleJourneyRef.datedVehicleJourneyRef.split('/').pop() ? journey : undefined }
                             vehicleActivity = { vehicleActivity }
                             key             = { vehicleActivity.monitoredVehicleJourney.vehicleRef }
                             eventHandlers   = {{
