@@ -53,7 +53,7 @@ export function BusMarker({ eventHandlers, vehicleActivity, journey }: {
             //For some reason onwardCalls return the IP as host, and calls return normal hostname
             const firstOnwardCallPathName = new URL(vehicleActivity.monitoredVehicleJourney.onwardCalls[0].stopPointRef).pathname;
             const firstOnwardCallIndex    = journey.calls.findIndex((call: Call) => new URL(call.stopPoint.url).pathname === firstOnwardCallPathName );
-            const currentCalls = journey.calls.slice(firstOnwardCallIndex);
+            const currentCalls            = journey.calls.slice(firstOnwardCallIndex);
 
             const total            = currentCalls.length;
             const firstCallsAmount = 3;
@@ -78,7 +78,7 @@ export function BusMarker({ eventHandlers, vehicleActivity, journey }: {
                 <table style={{ width: '330px'}}>
                     <thead>
                     <tr>
-                        <th style={{ width: '230px' }}>Stop</th>
+                        <th style={{ width: '230px' }}>Next stops</th>
                         <th style={{ width: '70px' }}>Arrival</th>
                         <th style={{ width: '70px' }}>Departure</th>
                     </tr>
