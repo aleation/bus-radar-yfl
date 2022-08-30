@@ -11,19 +11,17 @@ import { ErrorBoundary } from "./components/ErrorBoundary";
 import {
     FeatureGroup,
     LayersControl,
-    LayersControlProps,
-    MapContainer, Marker,
+    MapContainer,
     Polyline,
-    Popup,
     TileLayer
 } from 'react-leaflet';
 import {
-    useGetLinesQuery,
+    // useGetLinesQuery,
     useGetRoutesQuery,
     useGetJourneyPatternsQuery,
     useGetJourneysQuery,
-    useGetStopPointsQuery,
-    useGetMunicipalitiesQuery,
+    // useGetStopPointsQuery,
+    // useGetMunicipalitiesQuery,
     useGetVehicleActivityQuery
 } from './services/journeys';
 
@@ -40,32 +38,67 @@ const manualQueriesOptions = (ref:RefType) => ({
 });
 
 function App() {
-    const [vehiclesActivity,    setVehiclesActivity]   = useState([]);
-    const [journeysRef,         setJourneysRef]        = useState<RefType>();
+
+    const [vehiclesActivity,    setVehiclesActivity]    = useState([]);
+    const [journeysRef,         setJourneysRef]         = useState<RefType>();
     const [journeysPatternsRef, setJourneysPatternsRef] = useState<RefType>();
-    const [routesRef,           setRoutesRef]          = useState<RefType>();
+    const [routesRef,           setRoutesRef]           = useState<RefType>();
 
-    const [routePolyline, setRoutePolyline] = useState<ReactNode>();
+    const [journey,             setJourney]             = useState<Journey>();
+    const [journeyPattern,      setJourneyPattern]      = useState<JourneyPattern>();
+    const [route,               setRoute]               = useState<Route>();
 
-    const [busStops, setBusStops] = useState<ReactNode>();
+    const [busMarkerGroups,     setBusMarkerGroups]     = useState<ReactNode[]>();
+    const [routePolyline,       setRoutePolyline]       = useState<ReactNode>();
+    const [busStops,            setBusStops]            = useState<ReactNode>();
 
-    const [journey,        setJourney]        = useState<Journey>();
-    const [journeyPattern, setJourneyPattern] = useState<JourneyPattern>();
-    const [route,          setRoute]          = useState<Route>();
+    const [popupClassTimeout,   setPopupClassTimeout]   = useState<number>();
 
-    const [popupClassTimeout, setPopupClassTimeout] = useState<number>();
-
-    // const vehiclesActivityQuery = useGetVehicleActivityQuery({}, { pollingInterval: 0 } );
     const vehiclesActivityQuery = useGetVehicleActivityQuery({} , { pollingInterval: 1000 } );
-
-    // const vehiclesActivityQuery = useGetVehicleActivityQuery({ queryParameters: { vehicleRef:'47374_35' } } , { pollingInterval: 0 } );
-    // const vehiclesActivityQuery = useGetVehicleActivityQuery({ queryParameters: { vehicleRef:'47374_35' } } , { pollingInterval: 1000 } );
 
     useEffect(() => {
         if(vehiclesActivityQuery.status === 'fulfilled'){
             setVehiclesActivity(vehiclesActivityQuery.data.body);
         }
     }, [vehiclesActivityQuery]);
+
+    useEffect(() => {
+
+        const groupedVehiclesActivity = groupBy(vehiclesActivity, 'monitoredVehicleJourney.lineRef');
+        let result: React.ReactNode[] = [];
+
+        for(const lineRef in groupedVehiclesActivity){
+            const vehiclesActivityJSX = groupedVehiclesActivity[lineRef].map(
+                (vehicleActivity: VehicleActivity) => (
+                    <ErrorBoundary key={ 'error_' + vehicleActivity.monitoredVehicleJourney.vehicleRef }>
+                        <BusMarker
+                            journey={journey}
+                            vehicleActivity = { vehicleActivity }
+                            key             = { vehicleActivity.monitoredVehicleJourney.vehicleRef }
+                            eventHandlers   = {{
+                                popupopen : (e:LeafletEvent) => handlePopupOpen(e, vehicleActivity),
+                                popupclose: (e:LeafletEvent) => handlePopupClose(e),
+                            }}
+                        />
+
+                    </ErrorBoundary>
+                )
+            )
+
+            result = ([...result, (
+                <LayersControl.Overlay name={ lineRef } key={ lineRef } checked={ true }>
+                    <FeatureGroup key={ lineRef }  >
+
+                        { vehiclesActivityJSX }
+
+                    </FeatureGroup>
+                </LayersControl.Overlay>
+            )]);
+        }
+
+        setBusMarkerGroups(result);
+
+    }, [vehiclesActivity, journey]);
 
     const journeysQuery         = useGetJourneysQuery(        { ref: journeysRef},         manualQueriesOptions(journeysRef) );
     const journeysPatternsQuery = useGetJourneyPatternsQuery( { ref: journeysPatternsRef}, manualQueriesOptions(journeysPatternsRef) );
@@ -96,8 +129,8 @@ function App() {
     useEffect(() => {
         if(route){
             setRoutePolyline(<Polyline
-                pathOptions={{color: 'blue'}}
-                positions={ decodeProjection(route.geographicCoordinateProjection)}
+                pathOptions = { {color: 'blue'} }
+                positions   = { decodeProjection(route.geographicCoordinateProjection)}
             />)
         }
     }, [route]);
@@ -106,17 +139,10 @@ function App() {
         if(journeyPattern && route){
             setBusStops(journeyPattern.stopPoints.map((stopPoint: StopPoint) => (
                 <BusStopMarker
+                    key       = { stopPoint.shortName }
                     stopPoint = { stopPoint }
-                >
-                    <Popup>
-                        <table>
-                            <tr><td className="font-bold">Line</td><td>{ route.lineUrl.split('/').pop() }</td></tr>
-                            <tr><td className="font-bold">Bus stop:</td><td>{ stopPoint.name } ({ stopPoint.shortName })</td></tr>
-                            <tr><td className="font-bold">Tariff Zone:</td><td>{ stopPoint.tariffZone }</td></tr>
-                        </table>
-                    </Popup>
-                </BusStopMarker>
-
+                    route     = { route }
+                />
             )));
         }
     }, [journeyPattern, route]);
@@ -133,6 +159,9 @@ function App() {
             setJourney(undefined);
             setJourneyPattern(undefined);
             setRoute(undefined);
+
+            setRoutePolyline(undefined);
+            setBusStops(undefined);
         }
 
         if(journeysRefString){
@@ -147,55 +176,17 @@ function App() {
         popupElement.classList.remove('transitioning-popup');
     }
 
-    function mapVehiclesActivityToGroupedMarkers( vehiclesActivity: VehicleActivity[] ) {
-        const groupedVehiclesActivity = groupBy(vehiclesActivity, 'monitoredVehicleJourney.lineRef');
-        let result: React.ReactNode[] = [];
-        for(const lineRef in groupedVehiclesActivity){
-            const vehiclesActivityJSX = groupedVehiclesActivity[lineRef].map(
-                (vehicleActivity: VehicleActivity) => (
-                    <ErrorBoundary key={ 'error_' + vehicleActivity.monitoredVehicleJourney.vehicleRef }>
-                        <BusMarker
-                            vehicleActivity = { vehicleActivity }
-                            key             = { vehicleActivity.monitoredVehicleJourney.vehicleRef }
-                            eventHandlers   = {{
-                                popupopen : (e:LeafletEvent) => handlePopupOpen(e, vehicleActivity),
-                                popupclose: (e:LeafletEvent) => handlePopupClose(e),
-                            }}
-                        />
-
-                    </ErrorBoundary>
-                )
-            )
-
-            result = ([...result, (
-                <LayersControl.Overlay name={ lineRef } key={ lineRef } checked={ true }>
-                    <FeatureGroup key={ lineRef }  >
-
-                        { vehiclesActivityJSX }
-
-                    </FeatureGroup>
-                </LayersControl.Overlay>
-            )]);
-        }
-
-        return result;
-
-    }
-
     return (
         <div className="h-full w-full">
             <MapContainer
                 className= "h-full w-full"
                 center   = { [61.4990, 23.7605] }
                 zoom     = { 12 }
-                preferCanvas={ true }
             >
 
                 <LayersControl position="topright">
 
-                    {
-                        mapVehiclesActivityToGroupedMarkers(vehiclesActivity)
-                    }
+                    { busMarkerGroups }
 
                 </LayersControl>
 

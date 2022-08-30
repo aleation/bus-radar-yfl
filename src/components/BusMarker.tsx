@@ -5,10 +5,12 @@ import busIcon from "../assets/images/bus.png";
 import { VehicleActivity } from "../services/models/VehicleActivity";
 import { Marker, Popup } from "react-leaflet";
 import { locationToTuple } from "../helpers/misc";
+import { Journey } from "../services/models/Journey";
 
-export function BusMarker({ eventHandlers, vehicleActivity }: {
+export function BusMarker({ eventHandlers, vehicleActivity, journey }: {
     eventHandlers   : object,
     vehicleActivity : VehicleActivity,
+    journey?        : Journey,
 }){
     return <Marker
         position         = { locationToTuple(vehicleActivity.monitoredVehicleJourney.vehicleLocation) }
