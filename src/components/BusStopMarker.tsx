@@ -16,13 +16,17 @@ export function BusStopMarker({ stopPoint, route } : { stopPoint:StopPoint, rout
         }) }
     >
         <Popup>
+
+            { route &&
+                <div className="bg-blue-500 w-9 h-9 font-bold text-white rounded-full mb-2 flex items-center justify-center border-2 border-blue-600">
+                    { route.lineUrl.split('/').pop() }
+                </div>
+            }
+
             <table>
                 <tbody>
-                { route &&
-                    <tr><td className="font-bold">Line</td><td>{ route.lineUrl.split('/').pop() }</td></tr>
-                }
-                <tr><td className="font-bold">Bus stop:</td><td>{ stopPoint.name } ({ stopPoint.shortName })</td></tr>
                 <tr><td className="font-bold">Tariff Zone:</td><td>{ stopPoint.tariffZone }</td></tr>
+                <tr><td className="font-bold">Bus stop:</td><td>{ stopPoint.shortName } { stopPoint.name } - { stopPoint.municipality.name } </td></tr>
                 </tbody>
             </table>
         </Popup>

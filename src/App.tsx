@@ -52,8 +52,6 @@ function App() {
     const [routePolyline,       setRoutePolyline]       = useState<ReactNode>();
     const [busStops,            setBusStops]            = useState<ReactNode>();
 
-    const [popupClassTimeout,   setPopupClassTimeout]   = useState<number>();
-
     const vehiclesActivityQuery = useGetVehicleActivityQuery({} , { pollingInterval: 1000 } );
 
     useEffect(() => {
@@ -72,7 +70,7 @@ function App() {
                 (vehicleActivity: VehicleActivity) => (
                     <ErrorBoundary key={ 'error_' + vehicleActivity.monitoredVehicleJourney.vehicleRef }>
                         <BusMarker
-                            journey={journey}
+                            journey         = { journey }
                             vehicleActivity = { vehicleActivity }
                             key             = { vehicleActivity.monitoredVehicleJourney.vehicleRef }
                             eventHandlers   = {{
@@ -97,6 +95,10 @@ function App() {
         }
 
         setBusMarkerGroups(result);
+
+        return () => {
+            setBusMarkerGroups(undefined);
+        }
 
     }, [vehiclesActivity, journey]);
 
@@ -172,7 +174,7 @@ function App() {
 
     function handlePopupOpen(e:LeafletEvent, vehicleActivity:VehicleActivity){
         const popupElement = e.popup.getElement();
-        popupElement.classList.add('transitioning-popup')
+        popupElement.classList.add('transitioning-popup');
 
         // This should start a chain of api requests to get the Journey, JourneyPattern and Route
         const journeysRefString = vehicleActivity.monitoredVehicleJourney.framedVehicleJourneyRef.datedVehicleJourneyRef.split('/').pop();
@@ -183,8 +185,6 @@ function App() {
     }
 
     function handlePopupClose(e:LeafletEvent){
-        clearTimeout(popupClassTimeout);
-        setPopupClassTimeout(undefined);
         const popupElement = e.popup.getElement();
         popupElement.classList.remove('transitioning-popup');
     }

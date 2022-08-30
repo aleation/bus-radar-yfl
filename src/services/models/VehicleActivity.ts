@@ -8,7 +8,7 @@ interface VehicleLocation {
     latitude : string;
 }
 
-interface OnwardCall {
+export interface OnwardCall {
     expectedArrivalTime  : Date;
     expectedDepartureTime: Date;
     stopPointRef         : string;

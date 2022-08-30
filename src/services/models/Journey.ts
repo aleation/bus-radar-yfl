@@ -23,7 +23,7 @@ interface StopPoint {
     municipality: Municipality;
 }
 
-interface Call {
+export interface Call {
     arrivalTime: string;
     departureTime: string;
     stopPoint: StopPoint;
