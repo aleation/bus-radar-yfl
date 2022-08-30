@@ -7,7 +7,7 @@ import { Marker, Popup } from "react-leaflet";
 import { locationToTuple } from "../helpers/misc";
 import { Journey, Call } from "../services/models/Journey";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { solid, regular, brands } from '@fortawesome/fontawesome-svg-core/import.macro';
+import { solid } from '@fortawesome/fontawesome-svg-core/import.macro';
 
 export function BusMarker({ eventHandlers, vehicleActivity, journey }: {
     eventHandlers   : object,
@@ -18,6 +18,7 @@ export function BusMarker({ eventHandlers, vehicleActivity, journey }: {
     const [calls,       setCalls]       = useState<ReactNode>();
     const [onwardCalls, setOnwardCalls] = useState<OnwardCall[]>();
     const [delay,       setDelay]       = useState<string>();
+    const [isDelayed,   setIsDelayed]   = useState<boolean>();
 
     useEffect( () => {
         setOnwardCalls(vehicleActivity.monitoredVehicleJourney.onwardCalls);
@@ -32,13 +33,12 @@ export function BusMarker({ eventHandlers, vehicleActivity, journey }: {
         const delayString = vehicleActivity.monitoredVehicleJourney.delay;
 
         // When it's negative, it's not actually delayed, but the remaining time
-        if(delayString[0] !== '-'){
-            const matches   = Array.from(delayString.matchAll(/([0-9.]+[Y|M|D|H|S])/g));
-            const timeFrame = [ 'Years', 'Months', 'Days', 'Hours', 'Minutes', 'Seconds' ];
-            setDelay(matches.map((v,k) => parseInt(v[0]) + ' ' + timeFrame[k])
-                .filter(parseFloat).join(' '));
+        setIsDelayed(delayString[0] !== '-');
 
-        }
+        const matches   = Array.from(delayString.matchAll(/([0-9.]+[Y|M|D|H|S])/g));
+        const timeFrame = [ 'Years', 'Months', 'Days', 'Hours', 'Minutes', 'Seconds' ];
+        setDelay(matches.map((v,k) => parseInt(v[0]) + ' ' + timeFrame[k])
+            .filter(parseFloat).join(' '));
 
         return () => {
                 setDelay(undefined);
@@ -138,10 +138,20 @@ export function BusMarker({ eventHandlers, vehicleActivity, journey }: {
                     <div>{ calls }</div>
                 </>
             }
+
             { delay &&
                 <div className="mt-4 text-right">
-                    Delay:
-                    <span className="text-red-500 ml-1">{ delay }</span>
+                    { isDelayed ?
+                        <>
+                        <span>Delay:</span>
+                        <span className="text-red-500 ml-1">{ delay }</span>
+                        </>
+                    :
+                        <>
+                            <span>Arrives in:</span>
+                            <span className="text-green-500 ml-1">{ delay }</span>
+                        </>
+                    }
                 </div>
             }
         </Popup>
